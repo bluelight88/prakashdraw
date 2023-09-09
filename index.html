@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Jugariya Group</title>
+	<link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		tr:first-child {
+			background-color: #212529 !important;
+			color: #fff !important;
+			font-weight: bold;
+			font-size:1.2em;
+			padding: 15px;
+			border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body class="bg-light">
+
+	<div id="container">
+		<div class="p-5 bg-light rounded-3">
+			<h1 class="display-5 fw-bold">Generate Draw</h1>
+			<div class="row align-items-md-stretch">
+				<div class="col-md-6">
+					<div class="h-100 p-5 text-white bg-dark rounded-3">
+						<h4 class="mb-3">Teams</h4>
+						<div class="row">
+							<div class="col-sm-12">
+								<label for="team1" class="form-label">Team 1</label>
+								<input type="text" id="team1" value="ENG" class="draw_team form-control" placeholder="Team 1" aria-label="Team 1">
+							</div>
+							<div class="col-sm-12">
+								<label for="team2" class="form-label">Team 2</label>
+								<input type="text" id="team2" value="IND" class="draw_team form-control" placeholder="Team 2" aria-label="Team 2">
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="h-100 p-5 bg-light border rounded-3">
+						<h4 class="mb-3">Players</h4>
+						<div class="row">
+							<div class="col-sm-6">
+								<label for="team1" class="form-label">Player 1</label>
+								<input type="text" id="p1" value="Prakash" class="draw_player form-control">
+							</div>
+							<div class="col-sm-6">
+								<label for="team2" class="form-label">Player 2</label>
+								<input type="text" id="p2" value="Hemang" class="draw_player form-control">
+							</div>
+							<div class="col-sm-6">
+								<label for="team1" class="form-label">Player 3</label>
+								<input type="text" id="p3" value="Saumil" class="draw_player form-control">
+							</div>
+							<div class="col-sm-6">
+								<label for="team2" class="form-label">Player 4</label>
+								<input type="text" id="p4" value="Ravi" class="draw_player form-control">
+							</div>
+							<div class="col-sm-6">
+								<label for="team1" class="form-label">Player 5</label>
+								<input type="text" id="p5" value="Milap" class="draw_player form-control">
+							</div>
+							<div class="col-sm-6">
+								<label for="team2" class="form-label">Player 6</label>
+								<input type="text" id="p6" value="Nilay" class="draw_player form-control">
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<br />
+			<div>
+				<input type="button" value="Generate Draw" id="btnDoDraw" class="btn btn-primary btn-lg" />
+			</div>
+			<br />
+			<div id="output" class="table-responsive"></div>
+		</div>
+	</div>
+	<script>
+		function shuffleArray(array) {
+			for (let i = array.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[array[i], array[j]] = [array[j], array[i]];
+			}
+		}
+
+		function pairArrays(arr1, arr2, arr3) {
+			if (arr1.length !== arr2.length) {
+				throw new Error("Arrays must have the same length");
+			}
+			if (arr1.length !== arr3.length) {
+				throw new Error("Arrays must have the same length");
+			}
+			const pairedArrays = [];
+			for (let i = 0; i < arr1.length; i++) {
+				pairedArrays.push([arr1[i], arr2[i], arr3[i]]);
+			}
+			return pairedArrays;
+		}
+
+		function generateDraw() {
+			var top3 = [];
+			var bottom3 = [];
+			var jugariya = [];
+
+			var players = document.getElementsByClassName('draw_player');
+			for (var i = 0; i < players.length; ++i) {
+				jugariya.push(players[i].value);
+			}
+
+			var team = document.getElementsByClassName('draw_team');
+			for (var i = 0; i < team.length; ++i) {
+				for (var j = 1; j <= 3; ++j) {
+					top3.push(team[i].value + " " + j);
+				}
+			}
+
+			for (var i = 0; i < team.length; ++i) {
+				for (var j = 4; j <= 6; ++j) {
+					bottom3.push(team[i].value + " " + j);
+				}
+			}
+
+			shuffleArray(jugariya);
+			shuffleArray(top3);
+			shuffleArray(bottom3);
+
+			var pairedArrays = pairArrays(jugariya, top3, bottom3);
+
+			// Create an HTML table to display the results
+			var outputDiv = document.getElementById("output");
+			outputDiv.innerHTML = "";
+
+			var table = document.createElement("table");
+			table.className = "table table-striped table-sm";
+			var headerRow = table.insertRow();
+			headerRow.insertCell().textContent = "Jugariya";
+			headerRow.insertCell().textContent = "Top 3";
+			headerRow.insertCell().textContent = "Bottom 3";
+			for (var pair of pairedArrays) {
+				var row = table.insertRow();
+				row.insertCell().textContent = pair[0];
+				row.insertCell().textContent = pair[1];
+				row.insertCell().textContent = pair[2];
+			}
+			outputDiv.appendChild(table);
+		}
+
+		document.getElementById("btnDoDraw").addEventListener("click", function () {
+			generateDraw();
+		});
+	</script>
+</body>
+</html>
